@@ -233,7 +233,7 @@
     </div>
 
     <script>
-        // --- 3D СЦЕНА: КОСМОС И ЗЕМЛЯ ---
+        // --- 3D СЦЕНА: КОСМОС И ЗЕМЛЯ (БЕЗ СПУТНИКОВ) ---
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
@@ -255,7 +255,6 @@
         });
         const earth = new THREE.Mesh(earthGeometry, earthMaterial);
         
-        // Позиция Земли
         if (window.innerWidth > 768) {
             earthGroup.position.x = 15;
             earthGroup.position.y = 0;
@@ -274,18 +273,12 @@
             starsPos[i] = (Math.random() - 0.5) * 300; 
         }
         starsGeometry.setAttribute('position', new THREE.BufferAttribute(starsPos, 3));
-        const starsMaterial = new THREE.PointsMaterial({ 
-            size: 0.4, 
-            color: 0xffffff, 
-            transparent: true, 
-            opacity: 0.8 
-        });
+        const starsMaterial = new THREE.PointsMaterial({ size: 0.4, color: 0xffffff, transparent: true, opacity: 0.8 });
         const stars = new THREE.Points(starsGeometry, starsMaterial);
         scene.add(stars);
 
         // 3. Освещение
         scene.add(new THREE.AmbientLight(0x333344, 1.5)); 
-        
         const sunLight = new THREE.DirectionalLight(0xffffff, 2);
         sunLight.position.set(20, 10, 20);
         scene.add(sunLight);
@@ -296,13 +289,9 @@
         function animate() {
             requestAnimationFrame(animate);
             
-            // Вращение Земли
             earth.rotation.y += 0.0015;
-            
-            // Очень медленное вращение звезд
             stars.rotation.y += 0.0001;
 
-            // Камера (ПК vs Телефон)
             if (window.innerWidth > 768) {
                 camera.position.x = Math.sin(Date.now() * 0.0005) * 3; 
                 camera.position.y = Math.sin(Date.now() * 0.0003) * 2;  
@@ -328,31 +317,15 @@
 
         function changeSlide(direction) {
             const oldSlide = slides[currentSlide];
-            
-            let exitClass = '';
-            if (currentSlide % 2 === 0) {
-                exitClass = direction > 0 ? 'fly-left' : 'fly-right';
-            } else {
-                exitClass = direction > 0 ? 'fly-down' : 'fly-up';
-            }
-
+            let exitClass = currentSlide % 2 === 0 ? (direction > 0 ? 'fly-left' : 'fly-right') : (direction > 0 ? 'fly-down' : 'fly-up');
             oldSlide.classList.remove('active');
             oldSlide.classList.add(exitClass);
-
-            setTimeout(() => {
-                oldSlide.classList.remove(exitClass);
-            }, 700);
+            setTimeout(() => oldSlide.classList.remove(exitClass), 700);
 
             currentSlide = (currentSlide + direction + slides.length) % slides.length;
             
             const newSlide = slides[currentSlide];
-            let enterClass = '';
-            if (currentSlide % 2 === 0) {
-                enterClass = direction > 0 ? 'fly-right' : 'fly-left';
-            } else {
-                enterClass = direction > 0 ? 'fly-up' : 'fly-down';
-            }
-            
+            let enterClass = currentSlide % 2 === 0 ? (direction > 0 ? 'fly-right' : 'fly-left') : (direction > 0 ? 'fly-up' : 'fly-down');
             newSlide.classList.add(enterClass);
             
             setTimeout(() => {
