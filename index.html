@@ -9,7 +9,6 @@
         
         #canvas-container { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; }
         
-        /* Контейнер для слайдов теперь строго по центру */
         .slide-container { 
             position: relative; 
             z-index: 2; 
@@ -30,7 +29,6 @@
             width: 85%;
             max-width: 550px; 
             
-            /* Плавное появление без дерганий */
             opacity: 0; 
             transform: translateY(20px) scale(0.98); 
             transition: opacity 0.5s ease, transform 0.5s ease; 
@@ -47,7 +45,6 @@
             transform: translateY(0) scale(1); 
         }
         
-        /* Скрываем уходящий слайд */
         .slide.exiting { 
             opacity: 0; 
             transform: translateY(-20px) scale(0.98);
@@ -60,7 +57,6 @@
         li { margin-bottom: 8px; }
         li::marker { color: #00d2ff; }
         
-        /* Защита картинок, чтобы не пропадали и не вылезали */
         .slide-img {
             width: 100%;
             height: 180px;
@@ -69,11 +65,10 @@
             margin-top: 15px;
             border: 1px solid rgba(255,255,255,0.2);
             box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-            background-color: #1a1a2e; /* Фон, пока грузится */
+            background-color: #1a1a2e;
             display: block;
         }
 
-        /* Кнопки зафиксированы внизу */
         .nav-buttons { 
             position: fixed; 
             bottom: 20px; 
@@ -99,7 +94,6 @@
         }
         button:hover { background: #00d2ff; box-shadow: 0 0 25px rgba(0,210,255,0.9); }
 
-        /* Адаптив под мобилки */
         @media (max-width: 768px) {
             .slide { padding: 20px; width: 90%; max-height: 70vh; }
             h1 { font-size: 1.4em; }
@@ -130,7 +124,7 @@
                 <li>Омивається Атлантичним та Індійським океанами, на півночі — Середземне море.</li>
                 <li>Екватор перетинає материк майже посередині.</li>
             </ul>
-            <img src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?auto=format&fit=crop&w=800&q=80" class="slide-img" alt="Африка">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Africa_%28orthographic_projection%29.svg/800px-Africa_%28orthographic_projection%29.svg.png" class="slide-img" alt="Африка">
         </div>
 
         <!-- Слайд 3 -->
@@ -141,7 +135,7 @@
                 <li>На сході — рифтові западини й вулкани.</li>
                 <li>Кіліманджаро (5 895 м) — найвища вершина Африки.</li>
             </ul>
-            <img src="https://images.unsplash.com/photo-1612154459883-9312d4da0e3d?auto=format&fit=crop&w=800&q=80" class="slide-img" alt="Кіліманджаро">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Kilimanjaro_from_Moshi.jpg/800px-Kilimanjaro_from_Moshi.jpg" class="slide-img" alt="Кіліманджаро">
         </div>
 
         <!-- Слайд 4 -->
@@ -162,7 +156,7 @@
                 <li>Тут є дюни, кам’янисті плато та сухі русла.</li>
                 <li>В оазах підземна вода підтримує поселення та фінікові пальми.</li>
             </ul>
-            <img src="https://images.unsplash.com/photo-1509316785289-025f5b846b35?auto=format&fit=crop&w=800&q=80" class="slide-img" alt="Сахара">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Sahara_desert_%28Unsplash%29.jpg/800px-Sahara_desert_%28Unsplash%29.jpg" class="slide-img" alt="Сахара">
         </div>
 
         <!-- Слайд 6 -->
@@ -173,7 +167,7 @@
                 <li>Після дощів трави зеленіють, у сухий сезон — висихають.</li>
                 <li>Травоїдні мігрують у пошуках води та корму.</li>
             </ul>
-            <img src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?auto=format&fit=crop&w=800&q=80" class="slide-img" alt="Савана">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Savanna_Kenya.jpg/800px-Savanna_Kenya.jpg" class="slide-img" alt="Савана">
         </div>
 
         <!-- Слайд 7 -->
@@ -184,7 +178,7 @@
                 <li>Тепло й рясні дощі підтримують густий ліс.</li>
                 <li>Вирубування скорочує площу лісів.</li>
             </ul>
-            <img src="https://images.unsplash.com/photo-1550537687-c91072c4792d?auto=format&fit=crop&w=800&q=80" class="slide-img" alt="Тропічний ліс">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Congo_River_forest.jpg/800px-Congo_River_forest.jpg" class="slide-img" alt="Тропічний ліс">
         </div>
 
         <!-- Слайд 8 -->
@@ -195,7 +189,7 @@
                 <li>Конго — повноводна річка екватора.</li>
                 <li>Озера Вікторія та Танганьїка — найбільші водойми.</li>
             </ul>
-            <img src="https://images.unsplash.com/photo-1543156026-88b15f9b8e3a?auto=format&fit=crop&w=800&q=80" class="slide-img" alt="Водоспад Вікторія">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Victoria_Falls_Zambia.jpg/800px-Victoria_Falls_Zambia.jpg" class="slide-img" alt="Водоспад Вікторія">
         </div>
 
         <!-- Слайд 9 -->
@@ -206,7 +200,7 @@
                 <li>Бегемоти та крокодили — біля річок; горили — в лісах.</li>
                 <li>Заповідники допомагають охороняти види.</li>
             </ul>
-            <img src="https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&w=800&q=80" class="slide-img" alt="Тварини">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/African_elephant.jpg/800px-African_elephant.jpg" class="slide-img" alt="Тварини">
         </div>
 
         <!-- Слайд 10 -->
@@ -227,7 +221,6 @@
     </div>
 
     <script>
-        // --- 3D ГЛОБУС ---
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
@@ -258,9 +251,9 @@
             sphere.rotation.x += 0.0005;
 
             if (window.innerWidth > 768) {
-                camera.position.x = 10; // Глобус сдвинут вправо на ПК
+                camera.position.x = 10; 
             } else {
-                camera.position.x = 0;  // По центру на телефоне
+                camera.position.x = 0;  
             }
             camera.lookAt(scene.position);
             renderer.render(scene, camera);
@@ -273,7 +266,6 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        // --- ЛОГИКА ПЕРЕЛИСТЫВАНИЯ (ПЛАВНАЯ) ---
         let currentSlide = 0;
         const slides = document.querySelectorAll('.slide');
 
@@ -281,7 +273,6 @@
             slides[currentSlide].classList.remove('active');
             slides[currentSlide].classList.add('exiting');
             
-            // Ждем завершения анимации ухода
             setTimeout(() => {
                 slides[currentSlide].classList.remove('exiting');
             }, 500);
