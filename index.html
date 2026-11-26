@@ -204,76 +204,70 @@
     </div>
 
     <script>
-        // --- 3D ЛАНДШАФТ (НИЗКОПОЛИГОНАЛЬНЫЕ ГОРЫ) ---
+        // --- 3D СЦЕНА С ЧАСТИЦАМИ ---
         const scene = new THREE.Scene();
-        // Туман для глубины
-        scene.fog = new THREE.FogExp2(0x050510, 0.02);
-
-        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
         
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(window.devicePixelRatio);
         document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-        // Геометрия ландшафта
-        const geometry = new THREE.PlaneGeometry(200, 200, 64, 64);
-        
-        // Делаем горы с помощью шума
-        const vertices = geometry.attributes.position.array;
-        for (let i = 0; i < vertices.length; i += 3) {
-            const x = vertices[i];
-            const y = vertices[i + 1];
-            // Математический шум для создания гор
-            const z = Math.sin(x * 0.1) * Math.cos(y * 0.1) * 15 + Math.sin(x * 0.05) * 10;
-            vertices[i + 2] = z;
+        // 1. Глобус (спрятан за слайдами, но есть)
+        const geometry = new THREE.SphereGeometry(12, 64, 64);
+        const textureLoader = new THREE.TextureLoader();
+        const earthTexture = textureLoader.load('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg');
+        const material = new THREE.MeshPhongMaterial({ map: earthTexture, bumpScale: 0.05 });
+        const sphere = new THREE.Mesh(geometry, material);
+        // Сдвигаем глобус вправо, чтобы он не мешал тексту
+        if (window.innerWidth > 768) sphere.position.x = 15;
+        scene.add(sphere);
+
+        // 2. Частицы (Звездная пыль / Атмосфера)
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesCount = 1500;
+        const posArray = new Float32Array(particlesCount * 3);
+
+        for(let i = 0; i < particlesCount * 3; i++) {
+            // Разбрасываем частицы вокруг центра
+            posArray[i] = (Math.random() - 0.5) * 60;
         }
-        geometry.computeVertexNormals();
 
-        // Материал гор (каркасный, неоновый стиль)
-        const material = new THREE.MeshBasicMaterial({ 
-            color: 0x00d2ff, 
-            wireframe: true,
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 0.15,
+            color: 0x00d2ff, // Неоновый голубой цвет
             transparent: true,
-            opacity: 0.15
+            opacity: 0.8,
+            blending: THREE.AdditiveBlending // Эффект свечения
         });
 
-        const mountains = new THREE.Mesh(geometry, material);
-        mountains.rotation.x = -Math.PI / 2;
-        mountains.position.y = -10; // Опускаем вниз
-        scene.add(mountains);
+        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particlesMesh);
 
-        // Вторая плоскость (для объема)
-        const material2 = new THREE.MeshBasicMaterial({ 
-            color: 0x3a7bd5, 
-            wireframe: true,
-            transparent: true,
-            opacity: 0.1
-        });
-        const mountains2 = new THREE.Mesh(geometry, material2);
-        mountains2.rotation.x = -Math.PI / 2;
-        mountains2.position.y = -5;
-        mountains2.scale.set(0.8, 0.8, 0.8);
-        scene.add(mountains2);
+        // Свет
+        const ambientLight = new THREE.AmbientLight(0x404040, 1.5);
+        scene.add(ambientLight);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
+        directionalLight.position.set(5, 3, 5);
+        scene.add(directionalLight);
 
         camera.position.z = 30;
-        camera.position.y = 5;
 
         function animate() {
             requestAnimationFrame(animate);
             
-            // Медленное движение ландшафта
-            mountains.position.z += 0.1;
-            mountains2.position.z += 0.15;
+            // Вращение глобуса
+            sphere.rotation.y += 0.002;
+            
+            // Вращение и движение частиц (эффект полета)
+            particlesMesh.rotation.y += 0.001;
+            particlesMesh.rotation.x += 0.0005;
 
-            // Бесконечный цикл (если улетело далеко — возвращаем)
-            if (mountains.position.z > 100) mountains.position.z = -100;
-            if (mountains2.position.z > 100) mountains2.position.z = -100;
-
-            // Легкое покачивание камеры
-            camera.position.x = Math.sin(Date.now() * 0.0005) * 3;
-            camera.lookAt(0, 0, 0);
-
+            // Плавное покачивание камеры
+            camera.position.x = Math.sin(Date.now() * 0.0005) * 2;
+            camera.lookAt(scene.position);
+            
             renderer.render(scene, camera);
         }
         animate();
