@@ -7,133 +7,236 @@
     <style>
         body { margin: 0; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #050510; color: white; }
         #canvas-container { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; }
+        
         .slide-container { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 2; display: flex; justify-content: flex-start; align-items: center; padding-left: 5%; pointer-events: none; }
-        .slide { background: rgba(10, 15, 30, 0.75); backdrop-filter: blur(8px); border: 1px solid rgba(0, 210, 255, 0.3); border-radius: 20px; padding: 30px; max-width: 450px; width: 90%; opacity: 0; transform: translateX(-50px) scale(0.9); transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); position: absolute; pointer-events: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
+        
+        .slide { 
+            background: rgba(10, 15, 30, 0.85); 
+            backdrop-filter: blur(10px); 
+            border: 1px solid rgba(0, 210, 255, 0.3); 
+            border-radius: 20px; 
+            padding: 30px; 
+            max-width: 500px; 
+            width: 90%; 
+            opacity: 0; 
+            transform: translateX(-50px) scale(0.9); 
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); 
+            position: absolute; 
+            pointer-events: auto; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8); 
+        }
+        
         .slide.active { opacity: 1; transform: translateX(0) scale(1); }
+        
         h1 { color: #00d2ff; margin-top: 0; font-size: 1.8em; text-shadow: 0 0 10px rgba(0,210,255,0.5); }
-        h2 { color: #3a7bd5; font-size: 1.4em; margin-top: 0; }
-        p { font-size: 1em; line-height: 1.5; color: #e0e0e0; }
-        img { width: 100%; border-radius: 10px; margin-top: 15px; border: 1px solid rgba(255,255,255,0.2); }
-        .nav-buttons { position: absolute; bottom: 30px; width: 100%; display: flex; justify-content: center; gap: 20px; z-index: 3; pointer-events: auto; }
-        button { background: rgba(0, 210, 255, 0.2); border: 1px solid #00d2ff; color: #00d2ff; padding: 10px 25px; font-size: 1.1em; border-radius: 30px; cursor: pointer; transition: all 0.3s; font-weight: bold; }
-        button:hover { background: #00d2ff; color: #050510; box-shadow: 0 0 20px rgba(0,210,255,0.6); }
-        ul { font-size: 1em; line-height: 1.6; padding-left: 20px; color: #e0e0e0; }
+        h2 { color: #3a7bd5; font-size: 1.4em; margin-top: 0; margin-bottom: 15px;}
+        p { font-size: 1em; line-height: 1.5; color: #e0e0e0; margin-bottom: 10px;}
+        ul { font-size: 1em; line-height: 1.6; padding-left: 20px; color: #e0e0e0; margin-bottom: 15px;}
+        li { margin-bottom: 8px; }
         li::marker { color: #00d2ff; }
+        
+        .slide-img {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-top: 15px;
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        .nav-buttons { position: absolute; bottom: 30px; width: 100%; display: flex; justify-content: center; gap: 20px; z-index: 3; pointer-events: auto; }
+        button { background: rgba(0, 210, 255, 0.2); border: 1px solid #00d2ff; color: #00d2ff; padding: 12px 30px; font-size: 1.1em; border-radius: 30px; cursor: pointer; transition: all 0.3s; font-weight: bold; backdrop-filter: blur(5px);}
+        button:hover { background: #00d2ff; color: #050510; box-shadow: 0 0 20px rgba(0,210,255,0.6); }
+
         @media (max-width: 768px) {
-            .slide-container { justify-content: center; align-items: flex-start; padding-left: 0; padding-top: 5%; }
-            .slide { max-width: 90%; padding: 20px; }
-            h1 { font-size: 1.5em; }
-            h2 { font-size: 1.2em; }
+            .slide-container { justify-content: center; align-items: flex-start; padding-left: 0; padding-top: 2%; }
+            .slide { max-width: 95%; padding: 20px; max-height: 90vh; overflow-y: auto; }
+            h1 { font-size: 1.4em; }
+            h2 { font-size: 1.1em; }
+            .slide-img { max-height: 120px; }
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
+
     <div id="canvas-container"></div>
+
     <div class="slide-container">
         <!-- Слайд 1 -->
         <div class="slide active">
             <h1>Мої географічні дослідження</h1>
-            <h2>Африка: Річки, озера та водоспади</h2>
-            <p><b>Виконав:</b> учень 7-В класу</p>
-            <p><b>Маслов Максим</b></p>
+            <h2>Африка: материк контрастів</h2>
+            <p><b>Виконав:</b> учень 7-В класу<br><b>Маслов Максим</b></p>
+            <p>Африка дивує контрастами: від вологих екваторіальних лісів до найбільшої спекотної пустелі світу.</p>
         </div>
+
         <!-- Слайд 2 -->
         <div class="slide">
-            <h2>Водоспад Вікторія</h2>
-            <p>Один з найбільших водоспадів світу. Розташований на річці Замбезі. Місцеві жителі називають його «Мозі-оа-Тунья» — «гуркіт диму».</p>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Victoria_Falls_2012.jpg/800px-Victoria_Falls_2012.jpg" alt="Водоспад Вікторія">
+            <h2>Географічне положення</h2>
+            <ul>
+                <li>Африка — другий за площею материк світу.</li>
+                <li>Омивається Атлантичним та Індійським океанами, на півночі — Середземне море.</li>
+                <li>Екватор перетинає материк майже посередині.</li>
+            </ul>
+            <img src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?auto=format&fit=crop&w=800&q=80" class="slide-img" alt="Африка з космосу">
         </div>
+
         <!-- Слайд 3 -->
         <div class="slide">
-            <h2>Великі річки</h2>
+            <h2>Рельєф та Кіліманджаро</h2>
             <ul>
-                <li><b>Ніл</b> — найдовша річка світу.</li>
-                <li><b>Конго</b> — найповноводніша, двічі перетинає екватор.</li>
-                <li><b>Нігер</b> — артерія Західної Африки.</li>
-                <li><b>Замбезі</b> — тут розташований водоспад Вікторія.</li>
+                <li>Переважають плоскогір’я та височини.</li>
+                <li>На сході — рифтові западини й вулкани.</li>
+                <li>Кіліманджаро (5 895 м) — найвища вершина Африки.</li>
             </ul>
+            <img src="https://images.unsplash.com/photo-1612154459883-9312d4da0e3d?auto=format&fit=crop&w=800&q=80" class="slide-img" alt="Кіліманджаро">
         </div>
+
         <!-- Слайд 4 -->
         <div class="slide">
-            <h2>Озера Африки</h2>
-            <p>Більшість озер розташовані в тектонічних розломах.</p>
+            <h2>Клімат</h2>
             <ul>
-                <li><b>Вікторія</b> — найбільше озеро.</li>
-                <li><b>Танганьїка</b> — друге за глибиною у світі.</li>
-                <li><b>Ньяса</b> — озеро з прозорою водою.</li>
-                <li><b>Чад</b> — безстічне озеро.</li>
+                <li>Біля екватора жарко й волого майже весь рік.</li>
+                <li>Далі чергуються дощовий і сухий сезони.</li>
+                <li>У тропіках опадів мало; на півночі та півдні є субтропіки.</li>
             </ul>
         </div>
+
         <!-- Слайд 5 -->
         <div class="slide">
-            <h2>Практичне значення</h2>
-            <p>Вода в Африці — це життя. Річки та озера використовуються для:</p>
+            <h2>Пустеля Сахара</h2>
             <ul>
-                <li>Судноплавства (Ніл, Конго).</li>
-                <li>Зрошення посушливих земель.</li>
-                <li>Будівництва ГЕС (Асуанська на Нілі).</li>
-                <li>Риболовлі та туризму.</li>
+                <li>Найбільша спекотна пустеля світу.</li>
+                <li>Тут є дюни, кам’янисті плато та сухі русла.</li>
+                <li>В оазах підземна вода підтримує поселення та фінікові пальми.</li>
             </ul>
+            <img src="https://images.unsplash.com/photo-1509316785289-025f5b846b35?auto=format&fit=crop&w=800&q=80" class="slide-img" alt="Сахара">
         </div>
+
         <!-- Слайд 6 -->
         <div class="slide">
-            <h2>Дякую за увагу!</h2>
-            <p>Мої географічні дослідження показали, наскільки багата і різноманітна природа Африки.</p>
+            <h2>Савани</h2>
+            <ul>
+                <li>Трав’янисті рівнини з акаціями та баобабами.</li>
+                <li>Після дощів трави зеленіють, у сухий сезон — висихають.</li>
+                <li>Травоїдні мігрують у пошуках води та корму.</li>
+            </ul>
+            <img src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?auto=format&fit=crop&w=800&q=80" class="slide-img" alt="Савана">
+        </div>
+
+        <!-- Слайд 7 -->
+        <div class="slide">
+            <h2>Тропічні ліси</h2>
+            <ul>
+                <li>Найбільші ліси розташовані в басейні Конго.</li>
+                <li>Тепло й рясні дощі підтримують густий ліс.</li>
+                <li>Вирубування скорочує площу лісів.</li>
+            </ul>
+            <img src="https://images.unsplash.com/photo-1550537687-c91072c4792d?auto=format&fit=crop&w=800&q=80" class="slide-img" alt="Тропічний ліс">
+        </div>
+
+        <!-- Слайд 8 -->
+        <div class="slide">
+            <h2>Річки та озера</h2>
+            <ul>
+                <li>Ніл несе воду крізь посушливі райони.</li>
+                <li>Конго — повноводна річка екватора.</li>
+                <li>Озера Вікторія та Танганьїка — найбільші водойми.</li>
+            </ul>
+            <img src="https://images.unsplash.com/photo-1543156026-88b15f9b8e3a?auto=format&fit=crop&w=800&q=80" class="slide-img" alt="Водоспад Вікторія">
+        </div>
+
+        <!-- Слайд 9 -->
+        <div class="slide">
+            <h2>Тваринний світ</h2>
+            <ul>
+                <li>У саванах живуть слони, жирафи, зебри, леви.</li>
+                <li>Бегемоти та крокодили — біля річок; горили — в лісах.</li>
+                <li>Заповідники допомагають охороняти види.</li>
+            </ul>
+            <img src="https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&w=800&q=80" class="slide-img" alt="Тварини">
+        </div>
+
+        <!-- Слайд 10 -->
+        <div class="slide">
+            <h2>Висновок</h2>
+            <ul>
+                <li>Африка поєднує пустелі, савани, ліси та гори.</li>
+                <li>Клімат формує природні зони та життя людей.</li>
+                <li>Охорона природи важлива для майбутнього материка.</li>
+            </ul>
+            <p style="text-align: center; margin-top: 20px; font-size: 1.5em; color: #00d2ff;"><b>Дякую за увагу!</b></p>
         </div>
     </div>
+
     <div class="nav-buttons">
         <button onclick="changeSlide(-1)">← Назад</button>
         <button onclick="changeSlide(1)">Вперед →</button>
     </div>
+
     <script>
+        // --- 3D СЦЕНА (ГЛОБУС) ---
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(window.devicePixelRatio);
         document.getElementById('canvas-container').appendChild(renderer.domElement);
+
         const geometry = new THREE.SphereGeometry(12, 64, 64);
         const textureLoader = new THREE.TextureLoader();
         const earthTexture = textureLoader.load('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg');
+        
         const material = new THREE.MeshPhongMaterial({ map: earthTexture, bumpScale: 0.05 });
         const sphere = new THREE.Mesh(geometry, material);
         scene.add(sphere);
+
         const ambientLight = new THREE.AmbientLight(0x404040, 1.5);
         scene.add(ambientLight);
         const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
         directionalLight.position.set(5, 3, 5);
         scene.add(directionalLight);
+
         camera.position.z = 30;
+
         function animate() {
             requestAnimationFrame(animate);
             sphere.rotation.y += 0.002;
             sphere.rotation.x += 0.0005;
+
             if (window.innerWidth > 768) {
-                camera.position.x = 12;
+                camera.position.x = 12; // Сдвиг глобуса вправо на ПК
             } else {
-                camera.position.x = 0;
+                camera.position.x = 0;  // По центру на телефоне
             }
             camera.lookAt(scene.position);
             renderer.render(scene, camera);
         }
         animate();
+
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
+
+        // --- ЛОГИКА ПРЕЗЕНТАЦИИ ---
         let currentSlide = 0;
         const slides = document.querySelectorAll('.slide');
+
         function changeSlide(direction) {
             slides[currentSlide].classList.remove('active');
             currentSlide = (currentSlide + direction + slides.length) % slides.length;
             slides[currentSlide].classList.add('active');
         }
+
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowRight') changeSlide(1);
             if (e.key === 'ArrowLeft') changeSlide(-1);
         });
     </script>
 </body>
-                                 </html>
+</html>
