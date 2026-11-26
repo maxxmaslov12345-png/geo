@@ -9,19 +9,16 @@
         
         #canvas-container { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; }
         
-        /* Позиционирование на ПК: сдвиг влево */
         .slide-container { 
             position: absolute; 
-            top: 0; 
-            left: 0; 
-            width: 100vw; 
-            height: 100vh; 
+            top: 0; left: 0; width: 100vw; height: 100vh; 
             z-index: 2; 
             display: flex; 
             justify-content: flex-start; 
             align-items: center; 
             padding-left: 8%; 
             pointer-events: none; 
+            perspective: 1000px;
         }
         
         .slide { 
@@ -34,18 +31,35 @@
             max-width: 500px; 
             
             opacity: 0; 
-            transform: translateY(20px) scale(0.98); 
-            transition: opacity 0.5s ease, transform 0.5s ease; 
+            pointer-events: none;
             
             position: absolute; 
-            pointer-events: auto; 
             box-shadow: 0 20px 50px rgba(0,0,0,0.9); 
             max-height: 75vh;
+            
+            /* Прячем полосы прокрутки */
             overflow-y: auto;
+            overflow-x: hidden; 
+            
+            transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.7s ease;
         }
+
+        /* Стили для красивого скролла (если текст не влезет) */
+        .slide::-webkit-scrollbar { width: 6px; }
+        .slide::-webkit-scrollbar-track { background: transparent; }
+        .slide::-webkit-scrollbar-thumb { background: rgba(0, 210, 255, 0.3); border-radius: 3px; }
         
-        .slide.active { opacity: 1; transform: translateY(0) scale(1); }
-        .slide.exiting { opacity: 0; transform: translateY(-20px) scale(0.98); }
+        .slide.active { 
+            opacity: 1; 
+            transform: translateX(0) translateY(0) scale(1) !important; 
+            pointer-events: auto;
+            z-index: 10;
+        }
+
+        .fly-left { opacity: 0; transform: translateX(-150%) scale(0.8); }
+        .fly-right { opacity: 0; transform: translateX(150%) scale(0.8); }
+        .fly-up { opacity: 0; transform: translateY(-150%) scale(0.8); }
+        .fly-down { opacity: 0; transform: translateY(150%) scale(0.8); }
         
         h1 { color: #00d2ff; margin-top: 0; font-size: 1.7em; text-shadow: 0 0 10px rgba(0,210,255,0.5); text-align: center; }
         h2 { color: #3a7bd5; font-size: 1.4em; margin-top: 0; margin-bottom: 15px; text-align: center;}
@@ -91,18 +105,9 @@
         }
         button:hover { background: #00d2ff; box-shadow: 0 0 25px rgba(0,210,255,0.9); }
 
-        /* Настройки для мобилок (узкие экраны) */
         @media (max-width: 768px) {
-            .slide-container { 
-                justify-content: center; 
-                align-items: center; 
-                padding-left: 0; 
-            }
-            .slide { 
-                max-width: 90%; 
-                padding: 20px; 
-                max-height: 70vh; 
-            }
+            .slide-container { justify-content: center; padding-left: 0; }
+            .slide { max-width: 90%; padding: 20px; max-height: 70vh; }
             h1 { font-size: 1.4em; }
             h2 { font-size: 1.2em; }
             .slide-img { height: 140px; }
@@ -129,7 +134,8 @@
                 <li>Омивається Атлантичним та Індійським океанами, на півночі — Середземне море.</li>
                 <li>Екватор перетинає материк майже посередині.</li>
             </ul>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Africa_%28orthographic_projection%29.svg/800px-Africa_%28orthographic_projection%29.svg.png" class="slide-img" alt="Африка">
+            <!-- Новая надежная ссылка на карту -->
+            <img src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?auto=format&fit=crop&w=800&q=80" class="slide-img" alt="Африка">
         </div>
 
         <div class="slide">
@@ -139,7 +145,8 @@
                 <li>На сході — рифтові западини й вулкани.</li>
                 <li>Кіліманджаро (5 895 м) — найвища вершина Африки.</li>
             </ul>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Kilimanjaro_from_Moshi.jpg/800px-Kilimanjaro_from_Moshi.jpg" class="slide-img" alt="Кіліманджаро">
+            <!-- Надежная ссылка на горы -->
+            <img src="https://images.unsplash.com/photo-1612154459883-9312d4da0e3d?auto=format&fit=crop&w=800&q=80" class="slide-img" alt="Кіліманджаро">
         </div>
 
         <div class="slide">
@@ -158,7 +165,8 @@
                 <li>Тут є дюни, кам’янисті плато та сухі русла.</li>
                 <li>В оазах підземна вода підтримує поселення та фінікові пальми.</li>
             </ul>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Sahara_desert_%28Unsplash%29.jpg/800px-Sahara_desert_%28Unsplash%29.jpg" class="slide-img" alt="Сахара">
+            <!-- Надежная ссылка на пустыню -->
+            <img src="https://images.unsplash.com/photo-1509316785289-025f5b846b35?auto=format&fit=crop&w=800&q=80" class="slide-img" alt="Сахара">
         </div>
 
         <div class="slide">
@@ -168,7 +176,7 @@
                 <li>Після дощів трави зеленіють, у сухий сезон — висихають.</li>
                 <li>Травоїдні мігрують у пошуках води та корму.</li>
             </ul>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Savanna_Kenya.jpg/800px-Savanna_Kenya.jpg" class="slide-img" alt="Савана">
+            <img src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?auto=format&fit=crop&w=800&q=80" class="slide-img" alt="Савана">
         </div>
 
         <div class="slide">
@@ -178,7 +186,7 @@
                 <li>Тепло й рясні дощі підтримують густий ліс.</li>
                 <li>Вирубування скорочує площу лісів.</li>
             </ul>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Congo_River_forest.jpg/800px-Congo_River_forest.jpg" class="slide-img" alt="Тропічний ліс">
+            <img src="https://images.unsplash.com/photo-1550537687-c91072c4792d?auto=format&fit=crop&w=800&q=80" class="slide-img" alt="Тропічний ліс">
         </div>
 
         <div class="slide">
@@ -188,7 +196,7 @@
                 <li>Конго — повноводна річка екватора.</li>
                 <li>Озера Вікторія та Танганьїка — найбільші водойми.</li>
             </ul>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Victoria_Falls_Zambia.jpg/800px-Victoria_Falls_Zambia.jpg" class="slide-img" alt="Водоспад Вікторія">
+            <img src="https://images.unsplash.com/photo-1543156026-88b15f9b8e3a?auto=format&fit=crop&w=800&q=80" class="slide-img" alt="Водоспад Вікторія">
         </div>
 
         <div class="slide">
@@ -198,7 +206,7 @@
                 <li>Бегемоти та крокодили — біля річок; горили — в лісах.</li>
                 <li>Заповідники допомагають охороняти види.</li>
             </ul>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/African_elephant.jpg/800px-African_elephant.jpg" class="slide-img" alt="Тварини">
+            <img src="https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&w=800&q=80" class="slide-img" alt="Тварини">
         </div>
 
         <div class="slide">
@@ -218,7 +226,7 @@
     </div>
 
     <script>
-        // --- 3D СЦЕНА С ЧАСТИЦАМИ ---
+        // --- 3D СЦЕНА ---
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
@@ -233,49 +241,30 @@
         const material = new THREE.MeshPhongMaterial({ map: earthTexture, bumpScale: 0.05 });
         const sphere = new THREE.Mesh(geometry, material);
         
-        // На ПК глобус сдвигаем вправо, на телефоне он по центру
         if (window.innerWidth > 768) sphere.position.x = 15;
         scene.add(sphere);
 
-        // Частицы (Звездная пыль)
         const particlesGeometry = new THREE.BufferGeometry();
         const particlesCount = 1500;
         const posArray = new Float32Array(particlesCount * 3);
-
-        for(let i = 0; i < particlesCount * 3; i++) {
-            posArray[i] = (Math.random() - 0.5) * 60;
-        }
-
+        for(let i = 0; i < particlesCount * 3; i++) posArray[i] = (Math.random() - 0.5) * 60;
         particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-        const particlesMaterial = new THREE.PointsMaterial({
-            size: 0.15,
-            color: 0x00d2ff,
-            transparent: true,
-            opacity: 0.8,
-            blending: THREE.AdditiveBlending
-        });
-
+        const particlesMaterial = new THREE.PointsMaterial({ size: 0.15, color: 0x00d2ff, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending });
         const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
         scene.add(particlesMesh);
 
-        const ambientLight = new THREE.AmbientLight(0x404040, 1.5);
-        scene.add(ambientLight);
+        scene.add(new THREE.AmbientLight(0x404040, 1.5));
         const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
         directionalLight.position.set(5, 3, 5);
         scene.add(directionalLight);
-
         camera.position.z = 30;
 
         function animate() {
             requestAnimationFrame(animate);
-            
             sphere.rotation.y += 0.002;
             particlesMesh.rotation.y += 0.001;
-            particlesMesh.rotation.x += 0.0005;
-
             camera.position.x = Math.sin(Date.now() * 0.0005) * 2;
             camera.lookAt(scene.position);
-            
             renderer.render(scene, camera);
         }
         animate();
@@ -291,15 +280,38 @@
         const slides = document.querySelectorAll('.slide');
 
         function changeSlide(direction) {
-            slides[currentSlide].classList.remove('active');
-            slides[currentSlide].classList.add('exiting');
+            const oldSlide = slides[currentSlide];
             
+            let exitClass = '';
+            if (currentSlide % 2 === 0) {
+                exitClass = direction > 0 ? 'fly-left' : 'fly-right';
+            } else {
+                exitClass = direction > 0 ? 'fly-down' : 'fly-up';
+            }
+
+            oldSlide.classList.remove('active');
+            oldSlide.classList.add(exitClass);
+
             setTimeout(() => {
-                slides[currentSlide].classList.remove('exiting');
-            }, 500);
+                oldSlide.classList.remove(exitClass);
+            }, 700);
 
             currentSlide = (currentSlide + direction + slides.length) % slides.length;
-            slides[currentSlide].classList.add('active');
+            
+            const newSlide = slides[currentSlide];
+            let enterClass = '';
+            if (currentSlide % 2 === 0) {
+                enterClass = direction > 0 ? 'fly-right' : 'fly-left';
+            } else {
+                enterClass = direction > 0 ? 'fly-up' : 'fly-down';
+            }
+            
+            newSlide.classList.add(enterClass);
+            
+            setTimeout(() => {
+                newSlide.classList.remove(enterClass);
+                newSlide.classList.add('active'); 
+            }, 50);
         }
 
         document.addEventListener('keydown', (e) => {
