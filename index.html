@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Мої географічні дослідження: Африка</title>
     <style>
-        body { margin: 0; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #050510; color: white; }
+        body { margin: 0; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #050510; color: white; perspective: 1000px; }
         #canvas-container { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; }
         
-        .slide-container { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 2; display: flex; justify-content: flex-start; align-items: center; padding-left: 5%; pointer-events: none; }
+        .slide-container { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 2; display: flex; justify-content: flex-start; align-items: center; padding-left: 5%; pointer-events: none; transform-style: preserve-3d;}
         
         .slide { 
             background: rgba(10, 15, 30, 0.85); 
@@ -19,19 +19,33 @@
             max-width: 500px; 
             width: 90%; 
             opacity: 0; 
-            transform: translateX(-50px) scale(0.9); 
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); 
+            
+            /* Эффект 3D переворота и глубины */
+            transform: translateX(-100px) rotateY(45deg) scale(0.8); 
+            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1); 
+            
             position: absolute; 
             pointer-events: auto; 
             box-shadow: 0 20px 50px rgba(0,0,0,0.8); 
+            transform-style: preserve-3d;
         }
         
-        .slide.active { opacity: 1; transform: translateX(0) scale(1); }
+        /* Активный слайд выходит на передний план */
+        .slide.active { 
+            opacity: 1; 
+            transform: translateX(0) rotateY(0deg) scale(1); 
+        }
         
-        h1 { color: #00d2ff; margin-top: 0; font-size: 1.8em; text-shadow: 0 0 10px rgba(0,210,255,0.5); }
-        h2 { color: #3a7bd5; font-size: 1.4em; margin-top: 0; margin-bottom: 15px;}
-        p { font-size: 1em; line-height: 1.5; color: #e0e0e0; margin-bottom: 10px;}
-        ul { font-size: 1em; line-height: 1.6; padding-left: 20px; color: #e0e0e0; margin-bottom: 15px;}
+        /* Уходящий слайд улетает вправо и вглубь */
+        .slide.exiting {
+            opacity: 0;
+            transform: translateX(100px) rotateY(-45deg) scale(0.8);
+        }
+        
+        h1 { color: #00d2ff; margin-top: 0; font-size: 1.8em; text-shadow: 0 0 10px rgba(0,210,255,0.5); transform: translateZ(30px); }
+        h2 { color: #3a7bd5; font-size: 1.4em; margin-top: 0; margin-bottom: 15px; transform: translateZ(20px);}
+        p { font-size: 1em; line-height: 1.5; color: #e0e0e0; margin-bottom: 10px; transform: translateZ(10px);}
+        ul { font-size: 1em; line-height: 1.6; padding-left: 20px; color: #e0e0e0; margin-bottom: 15px; transform: translateZ(10px);}
         li { margin-bottom: 8px; }
         li::marker { color: #00d2ff; }
         
@@ -43,6 +57,7 @@
             margin-top: 15px;
             border: 1px solid rgba(255,255,255,0.2);
             box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            transform: translateZ(40px);
         }
 
         .nav-buttons { position: absolute; bottom: 30px; width: 100%; display: flex; justify-content: center; gap: 20px; z-index: 3; pointer-events: auto; }
@@ -208,9 +223,9 @@
             sphere.rotation.x += 0.0005;
 
             if (window.innerWidth > 768) {
-                camera.position.x = 12; // Сдвиг глобуса вправо на ПК
+                camera.position.x = 12; 
             } else {
-                camera.position.x = 0;  // По центру на телефоне
+                camera.position.x = 0;  
             }
             camera.lookAt(scene.position);
             renderer.render(scene, camera);
@@ -223,13 +238,24 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        // --- ЛОГИКА ПРЕЗЕНТАЦИИ ---
+        // --- ЛОГИКА ПРЕЗЕНТАЦИИ С 3D ЭФФЕКТАМИ ---
         let currentSlide = 0;
         const slides = document.querySelectorAll('.slide');
 
         function changeSlide(direction) {
+            // Добавляем класс exiting текущему слайду (он плавно улетает)
             slides[currentSlide].classList.remove('active');
+            slides[currentSlide].classList.add('exiting');
+            
+            // Убираем класс exiting через 0.8 секунды, чтобы он не мешал в будущем
+            setTimeout(() => {
+                slides[currentSlide].classList.remove('exiting');
+            }, 800);
+
+            // Меняем индекс
             currentSlide = (currentSlide + direction + slides.length) % slides.length;
+            
+            // Новый слайд становится активным (плавно прилетает)
             slides[currentSlide].classList.add('active');
         }
 
