@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Мої географічні дослідження: Африка</title>
     <style>
-        body { margin: 0; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #020205; color: white; }
+        body { margin: 0; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #000000; color: white; }
         
         #canvas-container { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; }
         
+        /* Позиционирование на ПК (текст слева) */
         .slide-container { 
             position: absolute; 
             top: 0; left: 0; width: 100vw; height: 100vh; 
@@ -23,7 +24,7 @@
         }
         
         .slide { 
-            background: rgba(10, 15, 30, 0.75); 
+            background: rgba(10, 15, 30, 0.8); 
             backdrop-filter: blur(15px); 
             border: 1px solid rgba(0, 210, 255, 0.4); 
             border-radius: 20px; 
@@ -94,7 +95,7 @@
         button { 
             background: rgba(0, 210, 255, 0.8); 
             border: 2px solid #00d2ff; 
-            color: #050510; 
+            color: #000000; 
             padding: 12px 30px; 
             font-size: 1.1em; 
             border-radius: 30px; 
@@ -105,6 +106,7 @@
         }
         button:hover { background: #00d2ff; box-shadow: 0 0 25px rgba(0,210,255,0.9); }
 
+        /* Настройки для мобилок */
         @media (max-width: 768px) {
             .slide-container { 
                 justify-content: center; 
@@ -122,9 +124,7 @@
             .slide-icon { font-size: 50px; }
         }
     </style>
-    <!-- Добавляем Three.js и загрузчик моделей (GLTFLoader) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 </head>
 <body>
 
@@ -235,7 +235,7 @@
     </div>
 
     <script>
-        // --- 3D СЦЕНА (КОСМОС + СПУТНИКИ) ---
+        // --- 3D СЦЕНА: КОСМОС И СПУТНИКИ ---
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
@@ -251,7 +251,7 @@
         const earthMaterial = new THREE.MeshPhongMaterial({ map: earthTexture, bumpScale: 0.05 });
         const earth = new THREE.Mesh(earthGeometry, earthMaterial);
         
-        // Позиционирование Земли (ПК - вправо, Телефон - вниз)
+        // Позиция Земли
         if (window.innerWidth > 768) {
             earth.position.x = 15;
             earth.position.y = 0;
@@ -261,65 +261,63 @@
         }
         scene.add(earth);
 
-        // 2. Спутники (используем простые геометрические фигуры вместо моделей, чтобы не грузить файлы)
-        // Создаем группу для спутников, чтобы они вращались вокруг Земли
+        // 2. Спутники (создаем из геометрических фигур)
         const satellitesGroup = new THREE.Group();
         scene.add(satellitesGroup);
 
-        // Функция создания одного спутника
-        function createSatellite(radius, speed, offsetX, offsetY, color) {
+        function createSatellite(radius, speed) {
             const satGroup = new THREE.Group();
             
-            // Корпус
-            const bodyGeo = new THREE.BoxGeometry(0.5, 0.5, 1);
-            const bodyMat = new THREE.MeshPhongMaterial({ color: 0xaaaaaa, emissive: color, emissiveIntensity: 0.5 });
+            // Корпус (серебристый цилиндр)
+            const bodyGeo = new THREE.CylinderGeometry(0.3, 0.3, 1.2, 8);
+            const bodyMat = new THREE.MeshPhongMaterial({ color: 0xcccccc, emissive: 0x333333 });
             const body = new THREE.Mesh(bodyGeo, bodyMat);
+            body.rotation.x = Math.PI / 2;
             
-            // Солнечные панели
-            const panelGeo = new THREE.BoxGeometry(2, 0.05, 0.6);
-            const panelMat = new THREE.MeshPhongMaterial({ color: 0x1a4b8c });
+            // Солнечные панели (синие пластины)
+            const panelGeo = new THREE.BoxGeometry(2.5, 0.05, 0.8);
+            const panelMat = new THREE.MeshPhongMaterial({ color: 0x0055ff, emissive: 0x001133 });
             const panel1 = new THREE.Mesh(panelGeo, panelMat);
-            panel1.position.x = 1.2;
+            panel1.position.x = 1.5;
             const panel2 = new THREE.Mesh(panelGeo, panelMat);
-            panel2.position.x = -1.2;
+            panel2.position.x = -1.5;
+
+            // Антенна
+            const antGeo = new THREE.ConeGeometry(0.2, 0.5, 8);
+            const antMat = new THREE.MeshPhongMaterial({ color: 0xff0000 });
+            const ant = new THREE.Mesh(antGeo, antMat);
+            ant.position.z = 0.8;
+            ant.rotation.x = Math.PI / 2;
 
             satGroup.add(body);
             satGroup.add(panel1);
             satGroup.add(panel2);
+            satGroup.add(ant);
 
-            // Позиция на орбите
-            satGroup.position.x = offsetX;
-            satGroup.position.y = offsetY;
-            
-            // Сохраняем параметры для анимации
-            satGroup.userData = { radius: radius, speed: speed, angle: Math.random() * Math.PI * 2, offsetX, offsetY };
-            
+            satGroup.userData = { radius: radius, speed: speed, angle: Math.random() * Math.PI * 2 };
             return satGroup;
         }
 
-        // Добавляем 3 спутника на разные орбиты
-        const sat1 = createSatellite(18, 0.005, 0, 0, 0x00d2ff);
-        const sat2 = createSatellite(20, -0.003, 0, 0, 0xffaa00);
-        const sat3 = createSatellite(16, 0.007, 0, 0, 0x00ff00);
-        
-        satellitesGroup.add(sat1);
-        satellitesGroup.add(sat2);
-        satellitesGroup.add(sat3);
+        // Создаем 3 спутника
+        const sat1 = createSatellite(18, 0.005);
+        const sat2 = createSatellite(22, -0.003);
+        const sat3 = createSatellite(15, 0.008);
+        satellitesGroup.add(sat1, sat2, sat3);
 
-        // 3. Звездное небо (Реалистичные точки)
+        // 3. Звездное небо (Белые точки)
         const starsGeometry = new THREE.BufferGeometry();
-        const starsCount = 3000;
+        const starsCount = 2000;
         const starsPos = new Float32Array(starsCount * 3);
         for(let i = 0; i < starsCount * 3; i++) {
-            starsPos[i] = (Math.random() - 0.5) * 200; // Разбрасываем по большой сфере
+            starsPos[i] = (Math.random() - 0.5) * 200; 
         }
         starsGeometry.setAttribute('position', new THREE.BufferAttribute(starsPos, 3));
-        const starsMaterial = new THREE.PointsMaterial({ size: 0.3, color: 0xffffff, transparent: true, opacity: 0.8 });
+        const starsMaterial = new THREE.PointsMaterial({ size: 0.4, color: 0xffffff, transparent: true, opacity: 0.9 });
         const stars = new THREE.Points(starsGeometry, starsMaterial);
         scene.add(stars);
 
         // Свет
-        scene.add(new THREE.AmbientLight(0x404040, 1.5));
+        scene.add(new THREE.AmbientLight(0x444444, 1.5)); // Мягкий свет
         const sunLight = new THREE.DirectionalLight(0xffffff, 2);
         sunLight.position.set(5, 3, 5);
         scene.add(sunLight);
@@ -330,22 +328,18 @@
         function animate() {
             requestAnimationFrame(animate);
             
-            // Вращение Земли
             earth.rotation.y += 0.001;
             
-            // Вращение звезд (очень медленное)
-            stars.rotation.y += 0.0001;
-
-            // Движение спутников по орбитам
+            // Вращение спутников
             [sat1, sat2, sat3].forEach(sat => {
                 sat.userData.angle += sat.userData.speed;
-                // Круговая орбита вокруг Земли
                 sat.position.x = Math.cos(sat.userData.angle) * sat.userData.radius;
                 sat.position.z = Math.sin(sat.userData.angle) * sat.userData.radius;
-                sat.rotation.y += 0.01; // Спутники тоже крутятся вокруг своей оси
+                sat.rotation.y += 0.01;
+                sat.rotation.z += 0.005;
             });
 
-            // Настройка камеры (ПК vs Телефон)
+            // Камера
             if (window.innerWidth > 768) {
                 camera.position.x = Math.sin(Date.now() * 0.0005) * 2; 
                 camera.position.y = 0;  
@@ -410,4 +404,4 @@
         });
     </script>
 </body>
-</html>
+    </html>
