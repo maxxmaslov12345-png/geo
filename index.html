@@ -23,7 +23,7 @@
         .slide { 
             background: rgba(10, 15, 30, 0.85); 
             backdrop-filter: blur(12px); 
-            border: 1px solid rgba(0, 210, 255, 0.3); 
+            border: 1px solid rgba(0, 210, 255, 0.4); 
             border-radius: 20px; 
             padding: 25px 30px; 
             width: 85%;
@@ -35,20 +35,13 @@
             
             position: absolute; 
             pointer-events: auto; 
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8); 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.9); 
             max-height: 80vh;
             overflow-y: auto;
         }
         
-        .slide.active { 
-            opacity: 1; 
-            transform: translateY(0) scale(1); 
-        }
-        
-        .slide.exiting { 
-            opacity: 0; 
-            transform: translateY(-20px) scale(0.98);
-        }
+        .slide.active { opacity: 1; transform: translateY(0) scale(1); }
+        .slide.exiting { opacity: 0; transform: translateY(-20px) scale(0.98); }
         
         h1 { color: #00d2ff; margin-top: 0; font-size: 1.7em; text-shadow: 0 0 10px rgba(0,210,255,0.5); text-align: center; }
         h2 { color: #3a7bd5; font-size: 1.4em; margin-top: 0; margin-bottom: 15px; text-align: center;}
@@ -108,7 +101,6 @@
     <div id="canvas-container"></div>
 
     <div class="slide-container">
-        <!-- Слайд 1 -->
         <div class="slide active">
             <h1>Мої географічні дослідження</h1>
             <h2>Африка: материк контрастів</h2>
@@ -116,7 +108,6 @@
             <p>Африка дивує контрастами: від вологих екваторіальних лісів до найбільшої спекотної пустелі світу.</p>
         </div>
 
-        <!-- Слайд 2 -->
         <div class="slide">
             <h2>Географічне положення</h2>
             <ul>
@@ -127,7 +118,6 @@
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Africa_%28orthographic_projection%29.svg/800px-Africa_%28orthographic_projection%29.svg.png" class="slide-img" alt="Африка">
         </div>
 
-        <!-- Слайд 3 -->
         <div class="slide">
             <h2>Рельєф та Кіліманджаро</h2>
             <ul>
@@ -138,7 +128,6 @@
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Kilimanjaro_from_Moshi.jpg/800px-Kilimanjaro_from_Moshi.jpg" class="slide-img" alt="Кіліманджаро">
         </div>
 
-        <!-- Слайд 4 -->
         <div class="slide">
             <h2>Клімат</h2>
             <ul>
@@ -148,7 +137,6 @@
             </ul>
         </div>
 
-        <!-- Слайд 5 -->
         <div class="slide">
             <h2>Пустеля Сахара</h2>
             <ul>
@@ -159,7 +147,6 @@
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Sahara_desert_%28Unsplash%29.jpg/800px-Sahara_desert_%28Unsplash%29.jpg" class="slide-img" alt="Сахара">
         </div>
 
-        <!-- Слайд 6 -->
         <div class="slide">
             <h2>Савани</h2>
             <ul>
@@ -170,7 +157,6 @@
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Savanna_Kenya.jpg/800px-Savanna_Kenya.jpg" class="slide-img" alt="Савана">
         </div>
 
-        <!-- Слайд 7 -->
         <div class="slide">
             <h2>Тропічні ліси</h2>
             <ul>
@@ -181,7 +167,6 @@
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Congo_River_forest.jpg/800px-Congo_River_forest.jpg" class="slide-img" alt="Тропічний ліс">
         </div>
 
-        <!-- Слайд 8 -->
         <div class="slide">
             <h2>Річки та озера</h2>
             <ul>
@@ -192,7 +177,6 @@
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Victoria_Falls_Zambia.jpg/800px-Victoria_Falls_Zambia.jpg" class="slide-img" alt="Водоспад Вікторія">
         </div>
 
-        <!-- Слайд 9 -->
         <div class="slide">
             <h2>Тваринний світ</h2>
             <ul>
@@ -203,7 +187,6 @@
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/African_elephant.jpg/800px-African_elephant.jpg" class="slide-img" alt="Тварини">
         </div>
 
-        <!-- Слайд 10 -->
         <div class="slide">
             <h2>Висновок</h2>
             <ul>
@@ -221,41 +204,76 @@
     </div>
 
     <script>
+        // --- 3D ЛАНДШАФТ (НИЗКОПОЛИГОНАЛЬНЫЕ ГОРЫ) ---
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        // Туман для глубины
+        scene.fog = new THREE.FogExp2(0x050510, 0.02);
+
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
         
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(window.devicePixelRatio);
         document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-        const geometry = new THREE.SphereGeometry(12, 64, 64);
-        const textureLoader = new THREE.TextureLoader();
-        const earthTexture = textureLoader.load('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg');
+        // Геометрия ландшафта
+        const geometry = new THREE.PlaneGeometry(200, 200, 64, 64);
         
-        const material = new THREE.MeshPhongMaterial({ map: earthTexture, bumpScale: 0.05 });
-        const sphere = new THREE.Mesh(geometry, material);
-        scene.add(sphere);
+        // Делаем горы с помощью шума
+        const vertices = geometry.attributes.position.array;
+        for (let i = 0; i < vertices.length; i += 3) {
+            const x = vertices[i];
+            const y = vertices[i + 1];
+            // Математический шум для создания гор
+            const z = Math.sin(x * 0.1) * Math.cos(y * 0.1) * 15 + Math.sin(x * 0.05) * 10;
+            vertices[i + 2] = z;
+        }
+        geometry.computeVertexNormals();
 
-        const ambientLight = new THREE.AmbientLight(0x404040, 1.5);
-        scene.add(ambientLight);
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
-        directionalLight.position.set(5, 3, 5);
-        scene.add(directionalLight);
+        // Материал гор (каркасный, неоновый стиль)
+        const material = new THREE.MeshBasicMaterial({ 
+            color: 0x00d2ff, 
+            wireframe: true,
+            transparent: true,
+            opacity: 0.15
+        });
+
+        const mountains = new THREE.Mesh(geometry, material);
+        mountains.rotation.x = -Math.PI / 2;
+        mountains.position.y = -10; // Опускаем вниз
+        scene.add(mountains);
+
+        // Вторая плоскость (для объема)
+        const material2 = new THREE.MeshBasicMaterial({ 
+            color: 0x3a7bd5, 
+            wireframe: true,
+            transparent: true,
+            opacity: 0.1
+        });
+        const mountains2 = new THREE.Mesh(geometry, material2);
+        mountains2.rotation.x = -Math.PI / 2;
+        mountains2.position.y = -5;
+        mountains2.scale.set(0.8, 0.8, 0.8);
+        scene.add(mountains2);
 
         camera.position.z = 30;
+        camera.position.y = 5;
 
         function animate() {
             requestAnimationFrame(animate);
-            sphere.rotation.y += 0.002; 
-            sphere.rotation.x += 0.0005;
+            
+            // Медленное движение ландшафта
+            mountains.position.z += 0.1;
+            mountains2.position.z += 0.15;
 
-            if (window.innerWidth > 768) {
-                camera.position.x = 10; 
-            } else {
-                camera.position.x = 0;  
-            }
-            camera.lookAt(scene.position);
+            // Бесконечный цикл (если улетело далеко — возвращаем)
+            if (mountains.position.z > 100) mountains.position.z = -100;
+            if (mountains2.position.z > 100) mountains2.position.z = -100;
+
+            // Легкое покачивание камеры
+            camera.position.x = Math.sin(Date.now() * 0.0005) * 3;
+            camera.lookAt(0, 0, 0);
+
             renderer.render(scene, camera);
         }
         animate();
@@ -266,6 +284,7 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
+        // --- ЛОГИКА ПЕРЕЛИСТЫВАНИЯ ---
         let currentSlide = 0;
         const slides = document.querySelectorAll('.slide');
 
