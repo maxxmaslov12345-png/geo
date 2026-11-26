@@ -19,6 +19,7 @@
             padding-left: 8%; 
             pointer-events: none; 
             perspective: 1000px;
+            overflow: hidden; /* Убирает полосу прокрутки */
         }
         
         .slide { 
@@ -37,17 +38,14 @@
             box-shadow: 0 20px 50px rgba(0,0,0,0.9); 
             max-height: 75vh;
             
-            /* Прячем полосы прокрутки */
             overflow-y: auto;
             overflow-x: hidden; 
             
             transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.7s ease;
         }
 
-        /* Стили для красивого скролла (если текст не влезет) */
-        .slide::-webkit-scrollbar { width: 6px; }
-        .slide::-webkit-scrollbar-track { background: transparent; }
-        .slide::-webkit-scrollbar-thumb { background: rgba(0, 210, 255, 0.3); border-radius: 3px; }
+        /* Прячем скроллбар */
+        .slide::-webkit-scrollbar { width: 0px; background: transparent; }
         
         .slide.active { 
             opacity: 1; 
@@ -68,16 +66,20 @@
         li { margin-bottom: 8px; }
         li::marker { color: #00d2ff; }
         
-        .slide-img {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            border-radius: 10px;
-            margin-top: 15px;
-            border: 1px solid rgba(255,255,255,0.2);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-            background-color: #1a1a2e;
-            display: block;
+        /* Стиль для летающих иконок */
+        .slide-icon {
+            font-size: 80px;
+            text-align: center;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 15px rgba(0, 210, 255, 0.8));
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
         }
 
         .nav-buttons { 
@@ -110,7 +112,7 @@
             .slide { max-width: 90%; padding: 20px; max-height: 70vh; }
             h1 { font-size: 1.4em; }
             h2 { font-size: 1.2em; }
-            .slide-img { height: 140px; }
+            .slide-icon { font-size: 60px; }
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -134,8 +136,7 @@
                 <li>Омивається Атлантичним та Індійським океанами, на півночі — Середземне море.</li>
                 <li>Екватор перетинає материк майже посередині.</li>
             </ul>
-            <!-- Новая надежная ссылка на карту -->
-            <img src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?auto=format&fit=crop&w=800&q=80" class="slide-img" alt="Африка">
+            <div class="slide-icon">🌍</div>
         </div>
 
         <div class="slide">
@@ -145,8 +146,7 @@
                 <li>На сході — рифтові западини й вулкани.</li>
                 <li>Кіліманджаро (5 895 м) — найвища вершина Африки.</li>
             </ul>
-            <!-- Надежная ссылка на горы -->
-            <img src="https://images.unsplash.com/photo-1612154459883-9312d4da0e3d?auto=format&fit=crop&w=800&q=80" class="slide-img" alt="Кіліманджаро">
+            <div class="slide-icon">⛰️</div>
         </div>
 
         <div class="slide">
@@ -156,6 +156,7 @@
                 <li>Далі чергуються дощовий і сухий сезони.</li>
                 <li>У тропіках опадів мало; на півночі та півдні є субтропіки.</li>
             </ul>
+            <div class="slide-icon">☀️</div>
         </div>
 
         <div class="slide">
@@ -165,8 +166,7 @@
                 <li>Тут є дюни, кам’янисті плато та сухі русла.</li>
                 <li>В оазах підземна вода підтримує поселення та фінікові пальми.</li>
             </ul>
-            <!-- Надежная ссылка на пустыню -->
-            <img src="https://images.unsplash.com/photo-1509316785289-025f5b846b35?auto=format&fit=crop&w=800&q=80" class="slide-img" alt="Сахара">
+            <div class="slide-icon">🏜️</div>
         </div>
 
         <div class="slide">
@@ -176,7 +176,7 @@
                 <li>Після дощів трави зеленіють, у сухий сезон — висихають.</li>
                 <li>Травоїдні мігрують у пошуках води та корму.</li>
             </ul>
-            <img src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?auto=format&fit=crop&w=800&q=80" class="slide-img" alt="Савана">
+            <div class="slide-icon">🦒</div>
         </div>
 
         <div class="slide">
@@ -186,7 +186,7 @@
                 <li>Тепло й рясні дощі підтримують густий ліс.</li>
                 <li>Вирубування скорочує площу лісів.</li>
             </ul>
-            <img src="https://images.unsplash.com/photo-1550537687-c91072c4792d?auto=format&fit=crop&w=800&q=80" class="slide-img" alt="Тропічний ліс">
+            <div class="slide-icon">🌿</div>
         </div>
 
         <div class="slide">
@@ -196,7 +196,7 @@
                 <li>Конго — повноводна річка екватора.</li>
                 <li>Озера Вікторія та Танганьїка — найбільші водойми.</li>
             </ul>
-            <img src="https://images.unsplash.com/photo-1543156026-88b15f9b8e3a?auto=format&fit=crop&w=800&q=80" class="slide-img" alt="Водоспад Вікторія">
+            <div class="slide-icon">💧</div>
         </div>
 
         <div class="slide">
@@ -206,7 +206,7 @@
                 <li>Бегемоти та крокодили — біля річок; горили — в лісах.</li>
                 <li>Заповідники допомагають охороняти види.</li>
             </ul>
-            <img src="https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&w=800&q=80" class="slide-img" alt="Тварини">
+            <div class="slide-icon">🐘</div>
         </div>
 
         <div class="slide">
