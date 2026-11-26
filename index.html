@@ -5,59 +5,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Мої географічні дослідження: Африка</title>
     <style>
-        body { margin: 0; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #050510; color: white; }
+        body { margin: 0; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #050510; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; }
         
         #canvas-container { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; }
         
-        .slide-container { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 2; display: flex; justify-content: flex-start; align-items: center; padding-left: 5%; pointer-events: none; }
+        /* Контейнер для слайдов теперь строго по центру */
+        .slide-container { 
+            position: relative; 
+            z-index: 2; 
+            width: 100%; 
+            height: 100%; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            pointer-events: none; 
+        }
         
         .slide { 
             background: rgba(10, 15, 30, 0.85); 
-            backdrop-filter: blur(10px); 
-            border: 1px solid rgba(0, 210, 255, 0.4); 
+            backdrop-filter: blur(12px); 
+            border: 1px solid rgba(0, 210, 255, 0.3); 
             border-radius: 20px; 
-            padding: 30px; 
-            max-width: 500px; 
-            width: 90%; 
+            padding: 25px 30px; 
+            width: 85%;
+            max-width: 550px; 
             
+            /* Плавное появление без дерганий */
             opacity: 0; 
-            transform: scale(0.8) translateY(50px);
-            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: translateY(20px) scale(0.98); 
+            transition: opacity 0.5s ease, transform 0.5s ease; 
             
             position: absolute; 
             pointer-events: auto; 
             box-shadow: 0 20px 50px rgba(0,0,0,0.8); 
+            max-height: 80vh;
+            overflow-y: auto;
         }
         
         .slide.active { 
             opacity: 1; 
-            transform: scale(1) translateY(0);
+            transform: translateY(0) scale(1); 
         }
         
-        /* Анимация улетания вверх */
+        /* Скрываем уходящий слайд */
         .slide.exiting { 
             opacity: 0; 
-            transform: scale(1.1) translateY(-100px);
+            transform: translateY(-20px) scale(0.98);
         }
         
-        h1 { color: #00d2ff; margin-top: 0; font-size: 1.8em; text-shadow: 0 0 10px rgba(0,210,255,0.5); }
-        h2 { color: #3a7bd5; font-size: 1.4em; margin-top: 0; margin-bottom: 15px;}
-        p { font-size: 1em; line-height: 1.5; color: #e0e0e0; margin-bottom: 10px;}
-        ul { font-size: 1em; line-height: 1.6; padding-left: 20px; color: #e0e0e0; margin-bottom: 15px;}
+        h1 { color: #00d2ff; margin-top: 0; font-size: 1.7em; text-shadow: 0 0 10px rgba(0,210,255,0.5); text-align: center; }
+        h2 { color: #3a7bd5; font-size: 1.4em; margin-top: 0; margin-bottom: 15px; text-align: center;}
+        p { font-size: 1em; line-height: 1.5; color: #e0e0e0; margin-bottom: 10px; text-align: left;}
+        ul { font-size: 1em; line-height: 1.6; padding-left: 20px; color: #e0e0e0; margin-bottom: 15px; text-align: left;}
         li { margin-bottom: 8px; }
         li::marker { color: #00d2ff; }
         
+        /* Защита картинок, чтобы не пропадали и не вылезали */
         .slide-img {
             width: 100%;
-            max-height: 180px;
+            height: 180px;
             object-fit: cover;
             border-radius: 10px;
             margin-top: 15px;
             border: 1px solid rgba(255,255,255,0.2);
             box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            background-color: #1a1a2e; /* Фон, пока грузится */
+            display: block;
         }
 
-        /* ЖЕСТКО ПРИБИВАЕМ КНОПКИ ВНИЗ */
+        /* Кнопки зафиксированы внизу */
         .nav-buttons { 
             position: fixed; 
             bottom: 20px; 
@@ -67,7 +83,6 @@
             justify-content: center; 
             gap: 20px; 
             z-index: 9999; 
-            pointer-events: auto; 
         }
         
         button { 
@@ -84,13 +99,12 @@
         }
         button:hover { background: #00d2ff; box-shadow: 0 0 25px rgba(0,210,255,0.9); }
 
+        /* Адаптив под мобилки */
         @media (max-width: 768px) {
-            .slide-container { justify-content: center; align-items: center; padding-left: 0; }
-            .slide { max-width: 90%; padding: 20px; max-height: 75vh; overflow-y: auto; }
-            h1 { font-size: 1.5em; }
+            .slide { padding: 20px; width: 90%; max-height: 70vh; }
+            h1 { font-size: 1.4em; }
             h2 { font-size: 1.2em; }
-            .slide-img { max-height: 120px; }
-            .nav-buttons { bottom: 10px; }
+            .slide-img { height: 140px; }
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -240,14 +254,13 @@
 
         function animate() {
             requestAnimationFrame(animate);
-            sphere.rotation.y += 0.002; // Медленное вращение
+            sphere.rotation.y += 0.002; 
             sphere.rotation.x += 0.0005;
 
-            // Если ПК — глобус справа, если телефон — по центру
             if (window.innerWidth > 768) {
-                camera.position.x = 12; 
+                camera.position.x = 10; // Глобус сдвинут вправо на ПК
             } else {
-                camera.position.x = 0;  
+                camera.position.x = 0;  // По центру на телефоне
             }
             camera.lookAt(scene.position);
             renderer.render(scene, camera);
@@ -260,24 +273,20 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        // --- ПЕРЕЛИСТЫВАНИЕ ---
+        // --- ЛОГИКА ПЕРЕЛИСТЫВАНИЯ (ПЛАВНАЯ) ---
         let currentSlide = 0;
         const slides = document.querySelectorAll('.slide');
 
         function changeSlide(direction) {
-            // Текущий слайд улетает
             slides[currentSlide].classList.remove('active');
             slides[currentSlide].classList.add('exiting');
             
-            // Через 0.6 сек убираем класс, чтобы не висел
+            // Ждем завершения анимации ухода
             setTimeout(() => {
                 slides[currentSlide].classList.remove('exiting');
-            }, 600);
+            }, 500);
 
-            // Меняем индекс
             currentSlide = (currentSlide + direction + slides.length) % slides.length;
-            
-            // Новый слайд прилетает
             slides[currentSlide].classList.add('active');
         }
 
@@ -287,4 +296,4 @@
         });
     </script>
 </body>
-                                  </html>
+</html>
