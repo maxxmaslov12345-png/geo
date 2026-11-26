@@ -5,47 +5,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Мої географічні дослідження: Африка</title>
     <style>
-        body { margin: 0; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #050510; color: white; perspective: 1000px; }
+        body { margin: 0; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #050510; color: white; }
+        
         #canvas-container { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; }
         
-        .slide-container { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 2; display: flex; justify-content: flex-start; align-items: center; padding-left: 5%; pointer-events: none; transform-style: preserve-3d;}
+        .slide-container { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 2; display: flex; justify-content: flex-start; align-items: center; padding-left: 5%; pointer-events: none; perspective: 1200px; }
         
         .slide { 
             background: rgba(10, 15, 30, 0.85); 
             backdrop-filter: blur(10px); 
-            border: 1px solid rgba(0, 210, 255, 0.3); 
+            border: 1px solid rgba(0, 210, 255, 0.4); 
             border-radius: 20px; 
             padding: 30px; 
             max-width: 500px; 
             width: 90%; 
-            opacity: 0; 
             
-            /* Эффект 3D переворота и глубины */
-            transform: translateX(-100px) rotateY(45deg) scale(0.8); 
-            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1); 
+            /* Изначально слайды скрыты и улетели вдаль */
+            opacity: 0; 
+            transform: translateZ(-1000px) rotateY(45deg) rotateX(20deg); 
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Пружинистый эффект */
             
             position: absolute; 
             pointer-events: auto; 
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8); 
+            box-shadow: 0 30px 60px rgba(0,0,0,0.9); 
             transform-style: preserve-3d;
         }
         
-        /* Активный слайд выходит на передний план */
+        /* Активный слайд прилетает прямо к лицу */
         .slide.active { 
             opacity: 1; 
-            transform: translateX(0) rotateY(0deg) scale(1); 
+            transform: translateZ(0) rotateY(0deg) rotateX(0deg); 
         }
         
-        /* Уходящий слайд улетает вправо и вглубь */
-        .slide.exiting {
-            opacity: 0;
-            transform: translateX(100px) rotateY(-45deg) scale(0.8);
+        /* Уходящий слайд уносится вправо и вдаль */
+        .slide.exiting { 
+            opacity: 0; 
+            transform: translateZ(-800px) translateX(500px) rotateY(-60deg) rotateX(-20deg); 
         }
         
-        h1 { color: #00d2ff; margin-top: 0; font-size: 1.8em; text-shadow: 0 0 10px rgba(0,210,255,0.5); transform: translateZ(30px); }
-        h2 { color: #3a7bd5; font-size: 1.4em; margin-top: 0; margin-bottom: 15px; transform: translateZ(20px);}
-        p { font-size: 1em; line-height: 1.5; color: #e0e0e0; margin-bottom: 10px; transform: translateZ(10px);}
-        ul { font-size: 1em; line-height: 1.6; padding-left: 20px; color: #e0e0e0; margin-bottom: 15px; transform: translateZ(10px);}
+        h1 { color: #00d2ff; margin-top: 0; font-size: 1.8em; text-shadow: 0 0 15px rgba(0,210,255,0.6); }
+        h2 { color: #3a7bd5; font-size: 1.4em; margin-top: 0; margin-bottom: 15px;}
+        p { font-size: 1em; line-height: 1.5; color: #e0e0e0; margin-bottom: 10px;}
+        ul { font-size: 1em; line-height: 1.6; padding-left: 20px; color: #e0e0e0; margin-bottom: 15px;}
         li { margin-bottom: 8px; }
         li::marker { color: #00d2ff; }
         
@@ -56,13 +57,12 @@
             border-radius: 10px;
             margin-top: 15px;
             border: 1px solid rgba(255,255,255,0.2);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-            transform: translateZ(40px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.6);
         }
 
         .nav-buttons { position: absolute; bottom: 30px; width: 100%; display: flex; justify-content: center; gap: 20px; z-index: 3; pointer-events: auto; }
-        button { background: rgba(0, 210, 255, 0.2); border: 1px solid #00d2ff; color: #00d2ff; padding: 12px 30px; font-size: 1.1em; border-radius: 30px; cursor: pointer; transition: all 0.3s; font-weight: bold; backdrop-filter: blur(5px);}
-        button:hover { background: #00d2ff; color: #050510; box-shadow: 0 0 20px rgba(0,210,255,0.6); }
+        button { background: rgba(0, 210, 255, 0.15); border: 1px solid #00d2ff; color: #00d2ff; padding: 12px 30px; font-size: 1.1em; border-radius: 30px; cursor: pointer; transition: all 0.3s; font-weight: bold; backdrop-filter: blur(5px); box-shadow: 0 0 15px rgba(0,210,255,0.2); }
+        button:hover { background: #00d2ff; color: #050510; box-shadow: 0 0 30px rgba(0,210,255,0.8); transform: scale(1.05); }
 
         @media (max-width: 768px) {
             .slide-container { justify-content: center; align-items: flex-start; padding-left: 0; padding-top: 2%; }
@@ -219,8 +219,9 @@
 
         function animate() {
             requestAnimationFrame(animate);
-            sphere.rotation.y += 0.002;
-            sphere.rotation.x += 0.0005;
+            // Ускоряем вращение глобуса при перелистывании
+            sphere.rotation.y += 0.005; 
+            sphere.rotation.x += 0.001;
 
             if (window.innerWidth > 768) {
                 camera.position.x = 12; 
@@ -238,16 +239,16 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        // --- ЛОГИКА ПРЕЗЕНТАЦИИ С 3D ЭФФЕКТАМИ ---
+        // --- ЛОГИКА ПРЕЗЕНТАЦИИ С 3D ПОЛЕТОМ ---
         let currentSlide = 0;
         const slides = document.querySelectorAll('.slide');
 
         function changeSlide(direction) {
-            // Добавляем класс exiting текущему слайду (он плавно улетает)
+            // Текущий слайд улетает
             slides[currentSlide].classList.remove('active');
             slides[currentSlide].classList.add('exiting');
             
-            // Убираем класс exiting через 0.8 секунды, чтобы он не мешал в будущем
+            // Очищаем класс улетания через 0.8 сек
             setTimeout(() => {
                 slides[currentSlide].classList.remove('exiting');
             }, 800);
@@ -255,7 +256,7 @@
             // Меняем индекс
             currentSlide = (currentSlide + direction + slides.length) % slides.length;
             
-            // Новый слайд становится активным (плавно прилетает)
+            // Новый слайд прилетает
             slides[currentSlide].classList.add('active');
         }
 
